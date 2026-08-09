@@ -2,30 +2,37 @@ const mineflayer = require('mineflayer');
 const http = require('http'); 
 
 const botOptions = {
-    host: 'pookiesmp.in',             
+    host: 'as.pookiesmp.in',             // Kept your original IP
     port: 25565,                         
     username: 'jhon88',                  
-    version: '1.21.11'                   
+    version: '1.21.11',                   
+    physicsEnabled: false,               // FIX: Disables early movement to bypass the lobby proxy freeze
+    checkTimeoutInterval: 60000          // Extends timeout limit so it doesn't give up early
 };
 
 const botPassword = "jhon883355"; 
 
-// Web server setup to accept automated background pings
+// Keep-awake server
 const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('jhon88 AFK bot is actively running 24/7!');
 });
 const PORT = process.env.PORT || 8080;
-server.listen(PORT, () => {
-    console.log(`Web server listening on port ${PORT} for background pinging.`);
-});
+server.listen(PORT);
 
 function createBot() {
-    console.log('Bot (jhon88) is connecting to as.pookiesmp.in...');
+    console.log('Bot (jhon88) is connecting with 1.21+ physics patch...');
     const bot = mineflayer.createBot(botOptions);
 
+    // FIX: Auto-handles custom server resource packs that cause joining freezes
+    bot.on('resourcePack', (url, hash) => {
+        console.log('Server resource pack requested. Accepting...');
+        bot.acceptResourcePack();
+    });
+
     bot.on('spawn', () => {
-        console.log('jhon88 joined! Standing perfectly still.');
+        console.log('jhon88 successfully spawned in! Turning physics engine back on safely.');
+        bot.physicsEnabled = true; // Turn movement back on only AFTER we are fully inside the world
     });
 
     function useHotbarItem() {
