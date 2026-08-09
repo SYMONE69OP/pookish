@@ -1,0 +1,12 @@
+{
+  "name": "pookiesmp-afk-bot",
+  "version": "1.0.0",
+  "description": "24/7 AFK Bot for jhon88",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "mineflayer": "^4.23.0"
+  }
+}
