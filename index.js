@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 const http = require('http'); 
 
 const botOptions = {
-    host: 'as.pookiesmp.in',             
+    host: 'pookiesmp.in',             
     port: 25565,                         
     username: 'jhon88',                  
     version: '1.21.11'                   
