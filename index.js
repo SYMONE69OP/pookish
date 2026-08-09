@@ -1,40 +1,29 @@
 const mineflayer = require('mineflayer');
-const http = require('http'); 
 
 const botOptions = {
-    host: 'as.pookiesmp.in',             // Kept your original IP
+    host: 'as.pookiesmp.in',             // Server IP
     port: 25565,                         
-    username: 'jhon88',                  
-    version: '1.21.11',                   
-    physicsEnabled: false,               // FIX: Disables early movement to bypass the lobby proxy freeze
-    checkTimeoutInterval: 60000          // Extends timeout limit so it doesn't give up early
+    username: 'jhon88',                  // Bot Username
+    version: '1.21.11'                   
 };
 
 const botPassword = "jhon883355"; 
 
-// Keep-awake server
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('jhon88 AFK bot is actively running 24/7!');
-});
-const PORT = process.env.PORT || 8080;
-server.listen(PORT);
-
 function createBot() {
-    console.log('Bot (jhon88) is connecting with 1.21+ physics patch...');
+    console.log('Bot (jhon88) is connecting via Termux mobile network...');
     const bot = mineflayer.createBot(botOptions);
 
-    // FIX: Auto-handles custom server resource packs that cause joining freezes
+    // Auto-accept server texture packages
     bot.on('resourcePack', (url, hash) => {
         console.log('Server resource pack requested. Accepting...');
         bot.acceptResourcePack();
     });
 
     bot.on('spawn', () => {
-        console.log('jhon88 successfully spawned in! Turning physics engine back on safely.');
-        bot.physicsEnabled = true; // Turn movement back on only AFTER we are fully inside the world
+        console.log('jhon88 successfully spawned in!');
     });
 
+    // Right-clicks hotbar slot 1 after logging in
     function useHotbarItem() {
         console.log('Password sent. Waiting 3.5 seconds before right-clicking...');
         setTimeout(() => {
@@ -49,6 +38,7 @@ function createBot() {
         }, 3500); 
     }
 
+    // Auto-clicks survival option inside the chest GUI layout
     bot.on('windowOpen', (window) => {
         console.log(`Menu opened! Title/Type: ${window.title || window.type}`);
         const targetItem = window.containerItems().find(item => {
@@ -66,6 +56,7 @@ function createBot() {
         }
     });
 
+    // Master command listener for minak
     bot.on('chat', (username, message) => {
         if (username !== 'minak') return;
         console.log(`Master minak issued a command: ${message}`);
@@ -91,6 +82,7 @@ function createBot() {
         }
     });
 
+    // Handles Auth Server Registration
     bot.on('message', (jsonMsg) => {
         const message = jsonMsg.toString();
         if (message.includes('/register')) {
@@ -103,6 +95,7 @@ function createBot() {
         }
     });
 
+    // 20-Second Auto-Reconnect Delay
     bot.on('end', (reason) => {
         console.log(`jhon88 disconnected: ${reason}. Reconnecting in 20 seconds...`);
         setTimeout(() => createBot(), 20000); 
